@@ -1,3 +1,6 @@
 [submodule "libzip"]
 	path = libzip
 	url = https://github.com/nih-at/libzip.git
+[submodule "third_party/lib7zip"]
+	path = third_party/lib7zip
+	url = https://github.com/stonewell/lib7zip
