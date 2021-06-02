@@ -1,8 +1,4 @@
 %module archive
-%begin %{
-#define SWIG_PYTHON_STRICT_UNICODE_WCHAR
-#define SWIG_PYTHON_STRICT_BYTE_CHAR
-%}
 
 %include "typemaps.i"
 %include "python/cwstring.i"
