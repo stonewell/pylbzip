@@ -1,5 +1,13 @@
 %module archive
+%begin %{
+#define SWIG_PYTHON_STRICT_UNICODE_WCHAR
+#define SWIG_PYTHON_STRICT_BYTE_CHAR
+%}
+
 %include "typemaps.i"
+%include "python/cwstring.i"
+%include "python/cstring.i"
+
 
 %typemap(argout) archive_error_t * err {
     PyObject *o, *o2, *o3;
