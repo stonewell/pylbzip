@@ -27,3 +27,18 @@ public:
 
 	virtual int GetSize(unsigned __int64 * size);
 };
+
+class ArchiveOutStream : public C7ZipOutStream
+{
+private:
+	FILE * m_pFile;
+public:
+	ArchiveOutStream() = default;
+    virtual ~ArchiveOutStream();
+
+public:
+    bool Init(const std::string & path);
+	virtual int Write(const void *data, unsigned int size, unsigned int *processedSize);
+    virtual int Seek(__int64 offset, unsigned int seekOrigin, unsigned __int64 *newPosition);
+    virtual int SetSize(unsigned __int64 size) { return 0; }
+};

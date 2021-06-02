@@ -63,12 +63,28 @@ archive_entry_t archive_open_entry(archive_t archive, int entry_idx, archive_err
         return nullptr;
     }
 
+    entry_ptr->full_path = entry_ptr->pArchiveItem->GetFullPath();
+
     *err = ARCHIVE_SUCCESS;
     return entry_ptr.release();
 }
 
 archive_error_t archive_extract_entry(archive_t archive, archive_entry_t entry, const char * target_path)
 {
+    auto archive_ptr = reinterpret_cast<archive_s*>(archive);
+
+    auto entry_ptr = reinterpret_cast<archive_entry_s*>(entry);
+
+    ArchiveOutStream aos;
+
+    if (!aos.Init(target_path))
+        return ERR_ARCHIVE_CREATE_FILE_FAILED;
+
+    if (!archive_ptr->pArchive->Extract(entry_ptr->pArchiveItem,
+                                        &aos)) {
+        return ERR_ARCHIVE_EXTRACT_FAILED;
+    }
+
     return ARCHIVE_SUCCESS;
 }
 
@@ -89,14 +105,30 @@ const wchar_t * entry_get_fullpath(archive_entry_t entry, archive_error_t * err)
     *err = ARCHIVE_SUCCESS;
     auto entry_ptr = reinterpret_cast<archive_entry_s *>(entry);
 
-    entry_ptr->full_path = entry_ptr->pArchiveItem->GetFullPath();
-
     return entry_ptr->full_path.c_str();
 }
 
 archive_error_t close_entry(archive_entry_t entry)
 {
     std::unique_ptr<archive_entry_s> entry_ptr{reinterpret_cast<archive_entry_s*>(entry)};
+
+    return ARCHIVE_SUCCESS;
+}
+
+archive_error_t archive_set_password(archive_t archive, const wchar_t * password)
+{
+    auto archive_ptr = reinterpret_cast<archive_s*>(archive);
+
+    archive_ptr->pArchive->SetArchivePassword(password);
+
+    return ARCHIVE_SUCCESS;
+}
+
+archive_error_t entry_set_password(archive_entry_t entry, const wchar_t * password)
+{
+    auto entry_ptr = reinterpret_cast<archive_entry_s*>(entry);
+
+    entry_ptr->pArchiveItem->SetArchiveItemPassword(password);
 
     return ARCHIVE_SUCCESS;
 }

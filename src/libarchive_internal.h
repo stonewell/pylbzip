@@ -11,9 +11,6 @@ struct archive_entry_s {
     std::wstring full_path;
 
     ~archive_entry_s() {
-        if (pArchiveItem) {
-            delete pArchiveItem;
-        }
     }
 };
 
